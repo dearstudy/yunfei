@@ -24,14 +24,49 @@ class Yunfei_model extends CI_Model
 		}
 	}
 
+	public function login($value)
+	{
+		$phone = $value['phone'];
+		if(FALSE === isset($phone))
+			return array('code'=>10000 , 'error'=>'缺少电话号码');
+
+		$card = $value['card'];
+		if(FALSE === isset($card))
+			return array('code'=>10000 , 'error'=>'缺少身份证号码后六位');
+
+		$query = $this->db->select('cards')->where('phone', $phone);
+
+		if(FALSE == $query){
+				return array('code' => 10000, 'error' => '查询错误');
+		}
+		$row = $query->row();
+
+		if (FALSE ==  isset($row))
+		{
+    		return array('code' => 10000, 'error' => '请先报名');
+		}
+		$rawcard = $row->cards;
+
+		if(FALSE == isset($rawcard))
+		{
+				return array('code' => 10000, 'error' => '异常错误，没身份证号码');
+		}
+
+		if($card == substr($rawcard, -6))
+		{
+				return array('code' => 0, 'error' => '登录成功');
+		}
+		return array('code' => 10000, 'error' => '求求你，打打我吧！');
+	}
+
 	public function register($value)
 	{
 		$phone = $value['phone'];
 		if(FALSE === isset($phone))
 			return array('code'=>10000 , 'error'=>'缺少电话号码');
 
-		$borthdays = $value['borthdays'];
-		if(FALSE === isset($borthdays))
+		$cards = $value['cards'];
+		if(FALSE === isset($cards))
 			return array('code'=>10000 , 'error'=>'缺少身份证号码');
 
 		$query = $this->db->get_where('user', array('phone' => $phone));
@@ -40,7 +75,7 @@ class Yunfei_model extends CI_Model
 			return array('code'=>10000 , 'error'=>'该电话号码已经报名了');
 		}
 
-		$query = $this->db->get_where('user', array('borthdays' => $borthdays));
+		$query = $this->db->get_where('user', array('cards' => $cards));
 		if ($query->num_rows() > 0)
 		{
 			return array('code'=>10000 , 'error'=>'该身份证号码已经报名了');

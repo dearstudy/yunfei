@@ -29,13 +29,13 @@
 <div class="wrap">
     <h1 align="center">登录</h1>
 
-    <div class="form" v-if="!promise">
+    <div class="form">
         <div class="form-user">
             <div class="items-wrap">
-                <input type="text" placeholder="请输入账号" v-model="formInfo.account">
+                <input type="text" placeholder="请输入手机号码" v-model="formInfo.account">
             </div>
             <div class="items-wrap">
-                <input type="password" placeholder="请输入密码" v-model="formInfo.password">
+                <input type="password" placeholder="请输入身份证后六位" v-model="formInfo.password">
             </div>
             <div class="items-wrap btn">
                 <button @click="fileUp">提交信息</button>
@@ -68,6 +68,8 @@
 
                 if(!_this.formInfo['password'])
                     alert('密码不能为空');
+                    
+                localStorage.phone = _this.formInfo['account'];
 
                 $.ajax({
                     url:'https://www.mlxiu.com/yunfei/login',
@@ -75,7 +77,7 @@
                     type:'post',
                     success:function (data) {
                         if (data.code == 0) {
-
+                            window.location.href = "select.html";
                         }else{
                             alert(data.error);
                         }

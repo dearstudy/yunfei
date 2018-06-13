@@ -34,6 +34,31 @@ class Yunfei extends MY_Controller {
 		$this->output->json(array('code' => 10000, 'error' => '不允许操作'));
 	}
 
+	public function login()
+	{
+		if (FALSE === $this->input->is_ajax_request())
+		{
+			$this->output->json(array('code' => 10000, 'error' => '不正确请求'));
+		}
+
+		$account = $this->input->post('account');
+		if(FALSE === isset($account))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[账号]'));
+		}
+
+		$password = $this->input->post('password');
+		if(FALSE === isset($password))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[密码]'));
+		}
+
+		$this->load->model('yunfei/Yunfei_model');
+		$data = array('phone' => $account, 'card' => $password);
+		$result = $this->Yunfei_model->login($data);
+		$this->output->json($result);
+	}
+
 	// 注册
 	public function register()
 	{
