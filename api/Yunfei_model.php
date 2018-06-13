@@ -34,8 +34,7 @@ class Yunfei_model extends CI_Model
 		if(FALSE === isset($card))
 			return array('code'=>10000 , 'error'=>'缺少身份证号码后六位');
 
-		$query = $this->db->select('cards')->from('user')->where('phone', $phone);
-
+		$query = $this->db->query('select `cards` from `user` where `phone` = ' . $phone);
 		if(FALSE == $query){
 				return array('code' => 10000, 'error' => '查询错误');
 		}
