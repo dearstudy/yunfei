@@ -55,7 +55,7 @@ class Yunfei_model extends CI_Model
 		{
 				return array('code' => 0, 'error' => '登录成功');
 		}
-		return array('code' => 10000, 'error' => '求求你，打打我吧！');
+		return array('code' => 10000, 'error' => '手机号码和身份证号码不匹配！');
 	}
 
 	public function register($value)
