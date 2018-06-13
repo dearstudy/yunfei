@@ -14,6 +14,26 @@
          [v-cloak] {
              display: none;
          }
+
+        .wins-img .login-btn{
+            position: absolute;
+            top: 0.3rem;
+            right:0.4rem;
+            height:1.31rem;
+        }
+
+        .wins-img .login-btn img{
+            width: 1.38rem;
+            height: 1.31rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .wins-img .login-btn span{
+            vertical-align: bottom;
+            font-size: 0.7rem;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -22,6 +42,7 @@
         <p class="num-name">{{list[0].names}}</p>
         <img :src="list[0].image_name" alt="">
         <button @click="signup"><img src="img/qt.png" alt=""><span>我要挑战</span></button>
+        <div class="login-btn" @click="login"><img src="img/login-icon.png" alt=""><span>点击登录</span></div>
     </div>
     <div class="ranking-list">
         <div class="thlist">
@@ -76,6 +97,9 @@
         methods:{
             signup:function(){
                 window.location.href='index.html'
+            },
+            login:function(){
+                window.location.href='login.html'
             }
         }
     })

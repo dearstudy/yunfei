@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>个人登录</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        body {
+            background: #fff;
+        }
+        button {
+            border: 1px solid #00579d;
+            color: #ffffff;
+            background: #00579d;
+            width: 80px;
+            height: 30px;
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1 align="center">登录</h1>
+
+    <div class="form" v-if="!promise">
+        <div class="form-user">
+            <div class="items-wrap">
+                <input type="text" placeholder="请输入账号" v-model="formInfo.account">
+            </div>
+            <div class="items-wrap">
+                <input type="password" placeholder="请输入密码" v-model="formInfo.password">
+            </div>
+            <div class="items-wrap btn">
+                <button @click="fileUp">提交信息</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.wrap',
+        data:function () {
+            return{
+                formInfo:{
+                    account:'',
+                    password:''
+                }
+            }
+        },
+        mounted:function () {
+
+        },
+        methods:{
+            fileUp:function(e){
+                var _this = this;
+                if(!_this.formInfo['account'])
+                    alert('账号不能为空');
+
+                if(!_this.formInfo['password'])
+                    alert('密码不能为空');
+
+                $.ajax({
+                    url:'https://www.mlxiu.com/yunfei/login',
+                    data:_this.formInfo,
+                    type:'post',
+                    success:function (data) {
+                        if (data.code == 0) {
+
+                        }else{
+                            alert(data.error);
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>
