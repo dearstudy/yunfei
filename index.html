@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>咏春周周赛</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        canvas {
+            background: rgba(255,255,255,0);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap" v-clock>
+    <canvas id="canvas"></canvas>
+    <div class="show" @click="msgShow" v-show="isShow" style="display: none;">
+        <h3>第一届上海市詠春拳大奖赛免责声明书</h3>
+        <p>本人自愿参加第一届上海市詠春拳大奖赛，并发表如下免责声明：</p>
+        <p>1、本人确保身体状况良好，无其它可能影响参加比赛的情形，所填信息均真实合法有效且无任何隐瞒。</p>
+        <p>2、比赛期间，本人服从组织者的活动安排，凡因个人私自行动或因隐瞒个人实际情况（病史、身体状况及其它状况）而造成的一切后果，由本人承担完全责任，与主办方无关。</p>
+        <p>3、本人同意赛事主办方在比赛过程进行摄影摄像，对于本人在赛事过程中出现的姓名和肖像、活动影像，主办方有权免费发表和使用。</p>
+        <p>本人已知悉、理解上述免责声明书的全部内容和并完全接受。</p>
+    </div>
+    <img src="img/logo.png" alt="" class="logo">
+    <div class="form">
+        <div class="header">
+            请正确填写以下信息
+        </div>
+        <div class="portrait">
+            <span style="margin-right: .5rem"></span>
+            <a class="file">
+                <img :src="imagesrc" alt="" id="image">
+                <input type="file" id="file" @change="changes">
+            </a>
+            <span style="margin-left: .5rem;"></span>
+        </div>
+        <p class="click-portrait">点击上传头像</p>
+        <div class="form-user">
+            <div class="items-wrap">
+                <input type="text" placeholder="姓名" v-model="formInfo.name">
+            </div>
+            <div class="items-wrap">
+                <input type="text" placeholder="手机" v-model="formInfo.phone">
+            </div>
+            <div class="items-wrap">
+                <input type="text" placeholder="身份证" v-model="formInfo.card">
+            </div>
+            <div class="items-wrap">
+                <select name=""  v-model="formInfo.sex">
+                    <option value="" selected>性别</option>
+                    <option value="男" >男</option>
+                    <option value="女">女</option>
+                </select>
+                <select name="" style="margin-left: 1rem;width: 3rem;" v-model="formInfo.weight">
+                    <option value="" selected>体重级别</option>
+                    <option :value="a" v-for="a in list">{{a}}</option>
+                </select>
+            </div>
+            <div class="items-wrap">
+                <input type="text" placeholder="出生年月" v-model="formInfo.borthday">
+            </div>
+            <div class="items-wrap check">
+                <input type="checkbox" id="check" checked="checked">
+                <label for="check">我已同意<a @click="mzsm">赛事免责声明</a></label>
+            </div>
+            <div class="items-wrap btn">
+                <button @click="fileUp">提交信息</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/fn.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.wrap',
+        data:function () {
+            return{
+                formInfo:{
+                    name:'',
+                    phone:'',
+                    card:'',
+                    sex:'',
+                    borthday:'',
+                    weight:''
+                },
+                imagesrc:'img/head.png',
+                isShow:false,
+                list:[
+                    '30公斤级（≤60公斤）',
+                    '40公斤级（>30公斤≤40公斤）',
+                    '48公斤级(>40公斤≤48公斤)',
+                    '56公斤级(>52公斤≤56公斤)',
+                    '60公斤级(>56公斤≤60公斤)',
+                    '65公斤级(>60公斤≤65公斤)',
+                    '70公斤级(>65公斤≤70公斤)',
+                    '75公斤级(>70公斤≤75公斤)',
+                    '80公斤级(>75公斤≤80公斤)',
+                    '85公斤级(>80公斤≤85公斤)',
+                    '85公斤以上级(>85公斤)'
+        ]
+            }
+        },
+        mounted:function () {
+        },
+        methods:{
+            fileUp:function (e) {
+                var files = document.getElementById('file').files[0];
+                var formob = new FormData();
+                var _this = this;
+                if (files == undefined) {
+                    alert('请上传头像');
+                    return;
+                }
+                var ys = null;
+                console.log(files.size);
+                photoCompress(files, {quality: 0.7}, function (base64) {
+                    ys=convertBase64UrlToBlob(base64);
+                    formob.append('myfile', ys, "file_"+Date.parse(new Date())+".png");
+                    for(var a in _this.formInfo){
+                        if(_this.formInfo[a]==''){
+                            alert('所有信息不能为空');
+                            return;
+                        }else{
+                            formob.append(a, _this.formInfo[a]);
+                        }
+                    }
+                    localStorage.phone = _this.formInfo.phone;
+                    $.ajax({
+                        url:'/asd',
+                        data:formob,
+                        processData: false,  // 不处理数据
+                        contentType: false,
+                        type:'post',
+                        success:function (data) {
+                            if (data.code == 1) {
+                                alert('提交成功');
+                                window.location.href = "select.html";
+                            }else{
+                                alert('提交失败，请刷新重试!');
+                            }
+                        },
+                        error:function (a,b,c) {
+                            alert('服务器连接失败');
+                        }
+                    })
+                });
+            },
+            changes:function (e) {
+                var files = document.getElementById('file').files[0];
+                var imgs = document.getElementById('image');
+                var url = window.URL.createObjectURL(files);
+                imgs.setAttribute('src', url);
+                localStorage.img = url;
+            },
+            mzsm:function () {
+                this.isShow = true;
+            },
+            msgShow:function () {
+                this.isShow = false;
+            }
+        }
+    })
+</script>
+</body>
+</html>

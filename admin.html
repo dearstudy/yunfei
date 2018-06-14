@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>后台管理</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        body {
+            background: #fff;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 300px;
+        }
+        td {
+            border: 1px solid #ccc;
+            text-align: center;
+            height: 30px;
+            padding: 10px;
+        }
+        th {
+            border: 1px solid #ccc;
+        }
+        button {
+            border: 1px solid #00579d;
+            color: #ffffff;
+            background: #00579d;
+            width: 80px;
+            height: 30px;
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+        .msgalert {
+            position: absolute;
+            top: 150px;
+            text-align: center;
+            height: 80px;
+            font-size: 20px;
+            width: 60%;
+            left: 20%;
+            background: #dd4e41;
+            color: #fff;
+            line-height: 80px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1 align="center">后台管理页面</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>手机号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>生日</th>
+                <th>身份证</th>
+                <th>胜</th>
+                <th>负</th>
+                <th>总得分</th>
+                <th>参赛时间与地点</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="a,b in list"  :class="'td-'+b">
+                <td>{{b+1}}</td>
+                <td>{{a.names}}</td>
+                <td>{{a.phone}}</td>
+                <td>{{a.sex}}</td>
+                <td>{{a.borthdays}}</td>
+                <td>{{a.cards}}</td>
+                <td><input type="number" :value="a.wins" disabled="disabled"></td>
+                <td><input type="number" :value="a.loser" disabled="disabled"></td>
+                <td><input type="number" :value="a.counts" disabled="disabled"></td>
+                <td>{{a.localtimes}}</td>
+                <td>
+                    <button @click="updata($event)" :data-key="'td-'+b">修改</button>
+                    <button @click="js_sure($event)" :data-end="'td-'+b" :data-phone="a.phone">确定</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.wrap',
+        data:function () {
+            return{
+                list:null
+            }
+        },
+        mounted:function () {
+            var _this = this;
+            $.ajax({
+                url:'/paiming',
+                type:'post',
+                success:function (data) {
+                    if (data.code == 1) {
+                        _this.list=data.attr
+                        console.log(_this.list)
+                    }else{
+                        alert('获取信息失败，请刷新重试!');
+                    }
+                },
+                error:function (a,b,c) {
+                    alert('服务器连接失败');
+                }
+            })
+        },
+        methods:{
+            updata:function (e) {
+                var rowid = e.currentTarget.getAttribute('data-key');
+                $('.' + rowid).find('input').removeAttr('disabled').css('background', '#dd4e41');
+            },
+            js_sure:function (e) {
+                var rowid = e.currentTarget.getAttribute('data-end');
+                $('.' + rowid).find('input').prop('disabled', 'disabled').css('background', '#fff');
+                var _this = this;
+                var phone = e.currentTarget.getAttribute('data-phone');
+                $.ajax({
+                    url:'/uppaiming',
+                    type:'post',
+                    data:{
+                        wins:$('.' + rowid).find('input')[0].value,
+                        loser:$('.' + rowid).find('input')[1].value,
+                        counts:$('.' + rowid).find('input')[2].value,
+                        phone:phone
+                    },
+                    success:function (data) {
+                        if (data.code == 1) {
+                            $('body').append('<div class="msgalert">修改成功</div>');
+                            $('.msgalert').fadeOut(500)
+                        }else{
+                            alert('获取信息失败，请刷新重试!');
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

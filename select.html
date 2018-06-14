@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>选择场馆</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        .footer {
+            margin-top: 5rem;
+            color: #333;
+            font-size: .6rem;
+            text-align: center;
+        }
+        .show {
+            overflow-y: scroll;
+            background: rgba(255,255,255,.9);
+            color: #000;
+        }
+        .show p {
+            text-indent: 1.5rem;
+        }
+        .show h3 {
+            text-align: center;
+        }
+        .show span {
+            margin-top: 1rem;
+            display: inline-block;
+            width: 100%;
+        }
+        .cd {
+            width: 8rem;
+        }
+        .jl {
+            width: 8rem;
+        }
+        .fuck {
+            width: 8rem;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="show" @click="msgShow" v-show="isShow"  style="display: none;">
+        <h3>詠春拳单黐手比赛</h3>
+        <p>詠春拳单黐手是一项运用詠春拳基本动作，以借力御力、守中用中、攻防兼备为主要内涵的文雅的武术对抗运动。以守正为主要方法和精神追求，通过控制自己的身体、感受对手的力量、利用对手的力量，从而破坏对手的重心，打击并战胜对手。通过参与本项目，可以帮助了解自己、提升自我控制能力、完善自我从而击败对手</p>
+        <h4>单黐手内容</h4>
+        <span>1. 单黐手对抗比赛场地</span>
+        <p>比赛场地为直径3米的圆形场地，场地正中设有边长为25厘米的正方形。</p>
+        <img src="img/cd.png" alt="" class="cd">
+        <span>2. 单黐手比赛时间</span>
+        <p>每场比赛分三局，每局2分钟，局间休息30秒。</p>
+        <span>3. 单黐手比赛礼仪</span>
+        <p>（1）每一局、每一场比赛开始和结束时，运动员互行抱拳礼。</p>
+        <p>（2）每一场比赛开始和结束时，双方运动员向裁判员、教练员、观众行抱拳礼</p>
+        <img src="img/jl.png" alt="" class="jl">
+        <span>4. 单黐手预备姿势——“上步搭手”</span>
+        <span>（1）动作说明</span>
+        <p>双方行“抱拳礼”之后，对侧脚向前上一步，双方脚外侧相抵，运动员左右脚斜45°平行，同时双方运动员对侧手互搭（摊掌）。</p>
+        <span>（2）动作要点</span>
+        <p>①运动员左右脚斜45°平行；</p>
+        <p>②运动员双方脚外侧相抵；</p>
+        <p>③运动员双方搭手成摊掌。</p>
+        <img src="img/fuck.png" alt="" class="fuck">
+        <span>5. 单黐手对抗方法</span>
+        <span>（1）双方运动员须在场地内，两脚外侧相抵于场地正中的正方形内，双手互搭（摊掌）。</span>
+        <span>（2）根据詠春拳的攻防原理，采用詠春拳的攻防招式和攻防动作（日子穿心拳、正掌、反铲掌、正铲掌、底掌、撑掌、摊掌、单膀手、圈手、圈马等）进行比赛。</span>
+        <span>（3）比赛期间双手不得分开超过1秒。</span>
+        <span>（4）整个比赛中双方运动员不得后退，双脚不得移动（只允许向前上1步）。</span>
+        <span>3. 单黐手规则</span>
+        <span>（1）得1分：有效击打到对方的有效得分部位得1分、劝告一次对方的1分。 </span>
+        <span>（2）得2分：把对方打到场外；利用有效方法把对方摔倒；警告一次对方得2分。</span>
+        <span>（3）不得分：没有有效击打（对方没有反应如护具声音、身体晃动、后退）；没有打到有效部位（有效部位如头部、躯体；无效部位如四肢；禁击部位如后脑、眼睛、裆部）。</span>
+        <span>（4）犯规：技术犯规（比赛中场外进行指导、对裁判员不礼貌或不服从判罚、比赛中大喊大叫、不带护具、不遵守礼节）；侵人犯规（在开始前或喊停后进攻对方、击打到禁击部位、手分开超过1秒、双脚连续上步或移动、后退、采用非詠春拳的技术动作）。</span>
+        <span>（5）罚则：每出现一次技术犯规劝告一次；每出现一次侵人犯规警告一次。</span>
+        <span>（6）胜负判定：采取三局两胜制。每一局中得分高者胜，如若平局，则按受警告少者为胜方、劝告少者为胜方、体重轻者为胜方、出场地次数少者为胜方、被摔倒次数少者为胜方的顺序判定每局胜负，如若再平局，进行加时赛，直至分出胜负。</span>
+    </div>
+    <img src="img/logo.png" alt="" class="logo">
+    <div class="form">
+        <div class="header">
+            您已填写过信息
+        </div>
+        <div class="portrait">
+            <span style="margin-right: .5rem"></span>
+            <a class="file">
+                <img :src="imagesrc" alt="" id="image">
+            </a>
+            <span style="margin-left: .5rem;"></span>
+        </div>
+        <p class="click-portrait">请选择比赛时间和场地</p>
+        <div class="form-user">
+            <div class="items-wrap">
+                <select name="" id="" v-model="selects">
+                    <option value="" selected>选择场馆</option>
+                    <option :value="a" v-for="a in changg">{{a}}</option>
+                </select>
+            </div>
+            <div class="items-wrap btn" style="margin-top: 3rem;">
+                <button @click="js_sure">确认参赛</button>
+            </div>
+            <div class="items-wrap btn" style="margin-top: .6rem;">
+                <p style="color: #b81c22;" @click="clickShow">查看赛事介绍与规则</p>
+            </div>
+        </div>
+    </div>
+    <p class="footer">本活动最终解释归上海大咏合体育发展有限公司所有</p>
+</div>
+<script src="js/vue.js"></script>
+<script src="js/jquery.js"></script>
+<script>
+    new Vue({
+        el:'.wrap',
+        data:function () {
+            return{
+                changg:[
+                   '5月30日 周三 普陀馆 19:00',
+                   '6月3日  周日  普陀馆  14:30',
+                    '6月6日  周四   黄浦馆  19:00',
+                    '6月10日  周日   黄浦馆   14:30',
+                    '6月13日   周四  普陀馆   19:00',
+                    '6月17日   周四  普陀馆   14:30',
+                    '6月20日  周四  黄浦馆  19:00',
+                    '6月24日  周日  黄浦馆  14:30'
+
+                ],
+                imagesrc:localStorage.img,
+                selects:'',
+                isShow:false
+            }
+        },
+        mounted:function () {
+        },
+        methods:{
+            js_sure:function () {
+                $.ajax({
+                    url:'/select',
+                    data:{
+                        phone:localStorage.phone,
+                        changg:this.selects,
+                    },
+                    type:'post',
+                    success:function (data) {
+                        if (data.code == 1) {
+                            alert('提交成功');
+                            window.location.href='ranking.html'
+                        }else{
+                            alert('提交失败，请刷新重试!');
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                })
+            },
+            clickShow:function () {
+                this.isShow = true;
+            },
+            msgShow:function () {
+                this.isShow = false;
+            }
+        }
+    })
+</script>
+</body>
+</html>

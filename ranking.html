@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>排行榜</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        body {
+            background: #ece9f4;
+        }
+         [v-cloak] {
+             display: none;
+         }
+    </style>
+</head>
+<body>
+<div class="wrap" v-cloak>
+    <div class="wins-img">
+        <p class="num-name">{{list[0].names}}</p>
+        <img :src="'upload/'+list[0].image_name" alt="">
+        <button><img src="img/qt.png" alt=""><span>我要挑战</span></button>
+    </div>
+    <div class="ranking-list">
+        <div class="thlist">
+            <span style="width: 2rem; ">排名</span>
+            <span style="width: 6rem; ">参赛者</span>
+            <span style="width: 2rem">胜</span>
+            <span style="width: 2rem">负</span>
+            <span style="width: 4rem;flex: 1;">总得分</span>
+        </div>
+        <div class="thlist-td" v-for="a,b in list">
+            <span style="width: 2rem; ">{{b+1}}</span>
+            <span class="span-tx">
+                <img :src="'upload/'+a.image_name" alt="">
+                {{a.names}}
+            </span>
+            <span style="width: 2rem" class="num-color">{{a.wins}}</span>
+            <span style="width: 2rem" class="num-color">{{a.loser}}</span>
+            <span style="width: 4rem;flex: 1;color: #15aa10; font-weight: bold;font-size: 1.2rem">{{a.counts}}</span>
+        </div>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script src="js/jquery.js"></script>
+
+<script>
+    new Vue({
+        el:'.wrap',
+        data:function () {
+            return{
+                list:['1']
+            }
+        },
+        created:function () {
+            var _this = this;
+            $.ajax({
+                url:'/paiming',
+                type:'post',
+                success:function (data) {
+                    if (data.code == 1) {
+                        _this.list=data.attr
+                        console.log(_this.list)
+                    }else{
+                        alert('获取信息失败，请刷新重试!');
+                    }
+                },
+                error:function (a,b,c) {
+                    alert('服务器连接失败');
+                }
+            })
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img src="" alt="" id="transform">
+<input type="file" id="file" >
+</body>
+<script>
+    var file = document.getElementById('file');
+
+
+
+    file.onchange=function () {
+        photoCompress(file.files[0], {
+            quality: 0.2
+        },function (base64Codes) {
+            document.getElementById('transform').src=base64Codes
+            console.log(convertBase64UrlToBlob(base64Codes))
+        })
+    }
+
+
+
+</script>
+</html>
