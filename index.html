@@ -114,7 +114,7 @@
         methods:{
             fileUp:function (e) {
                 var files = document.getElementById('file').files[0];
-                var formob = new FormData();
+                var formob = {'filename':"file_"+Date.parse(new Date())+".png"};
                 var _this = this;
                 if (files == undefined) {
                     alert('请上传头像');
@@ -124,16 +124,17 @@
                 console.log(files.size);
                 photoCompress(files, {quality: 0.7}, function (base64) {
                     ys=convertBase64UrlToBlob(base64);
-                    formob.append('myfile', ys, "file_"+Date.parse(new Date())+".png");
+                    formob['myfile'] = ys;
                     for(var a in _this.formInfo){
                         if(_this.formInfo[a]==''){
                             alert('所有信息不能为空');
                             return;
                         }else{
-                            formob.append(a, _this.formInfo[a]);
+                            formob[a] = _this.formInfo[a];
                         }
                     }
                     localStorage.phone = _this.formInfo.phone;
+                    console.log(formob);
                     $.ajax({
                         url:'https://www.mlxiu.com/yunfei/submit',
                         data:formob,
