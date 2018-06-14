@@ -136,14 +136,14 @@
         methods:{
             js_sure:function () {
                 $.ajax({
-                    url:'/select',
+                    url:'https://www.mlxiu.com/yunfei/signup',
                     data:{
                         phone:localStorage.phone,
                         changg:this.selects,
                     },
                     type:'post',
                     success:function (data) {
-                        if (data.code == 1) {
+                        if (data.code == 0) {
                             alert('提交成功');
                             window.location.href='ranking.html'
                         }else{

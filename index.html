@@ -64,7 +64,7 @@
                 </select>
             </div>
             <div class="items-wrap">
-                <input type="text" placeholder="出生年月" v-model="formInfo.borthday">
+                <input type="text" placeholder="出生年月，如：1970-08-15" v-model="formInfo.borthday">
             </div>
             <div class="items-wrap check">
                 <input type="checkbox" id="check" checked="checked">
@@ -134,19 +134,37 @@
                         }
                     }
                     localStorage.phone = _this.formInfo.phone;
+
+                    if(!/^((13[0-9])|(14[5|7])|(15[0-3])|(15[5-9])|(18[0,5-9])|(17[0-9]))\d{8}$/.test(formob['phone']))
+                    {
+                      alert("请输入正确的手机号码");
+                      return;
+                    }
+
+                    if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(formob['card']))
+                    {
+                      alert("请输入正确的身份证号码");
+                      return;
+                    }
+
+                    var reg=  /^((?!0000)[0-9]{4}-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+                    if(!reg.test(formob['borthday']))
+                    {
+                      alert("请输入正确的出生年月");
+                      return;
+                    }
                     console.log(formob);
                     $.ajax({
-                        url:'https://www.mlxiu.com/yunfei/submit',
+                        url:'https://www.mlxiu.com/yunfei/register',
                         data:formob,
-                        processData: false,  // 不处理数据
-                        contentType: false,
                         type:'post',
                         success:function (data) {
                             if (data.code == 0) {
                                 alert('提交成功');
                                 window.location.href = "select.html";
                             }else{
-                                alert('提交失败，请刷新重试!');
+                                // alert('提交失败，请刷新重试!');
+                                alert(data.error);
                             }
                         },
                         error:function (a,b,c) {
