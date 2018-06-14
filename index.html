@@ -135,13 +135,13 @@
                     }
                     localStorage.phone = _this.formInfo.phone;
                     $.ajax({
-                        url:'/asd',
+                        url:'https://www.mlxiu.com/yunfei/submit',
                         data:formob,
                         processData: false,  // 不处理数据
                         contentType: false,
                         type:'post',
                         success:function (data) {
-                            if (data.code == 1) {
+                            if (data.code == 0) {
                                 alert('提交成功');
                                 window.location.href = "select.html";
                             }else{
