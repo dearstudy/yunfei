@@ -123,8 +123,8 @@
                 var ys = null;
                 console.log(files.size);
                 photoCompress(files, {quality: 0.7}, function (base64) {
-                    ys=convertBase64UrlToBlob(base64);
-                    formob['myfile'] = ys;
+                    // ys=convertBase64UrlToBlob(base64);
+                    formob['myfile'] = base64;
                     for(var a in _this.formInfo){
                         if(_this.formInfo[a]==''){
                             alert('所有信息不能为空');
@@ -170,6 +170,13 @@
             }
         }
     })
+
+    function blobToDataURL(blob, callback)
+    {
+        var a = new FileReader();
+        a.onload = function (e) { callback(e.target.result); }
+        a.readAsDataURL(blob);
+    }
 </script>
 </body>
 </html>
