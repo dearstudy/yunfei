@@ -20,7 +20,7 @@
 <div class="wrap" v-cloak>
     <div class="wins-img">
         <p class="num-name">{{list[0].names}}</p>
-        <img :src="'upload/'+list[0].image_name" alt="">
+        <img :src="list[0].image_name" alt="">
         <button><img src="img/qt.png" alt=""><span>我要挑战</span></button>
     </div>
     <div class="ranking-list">
@@ -34,7 +34,7 @@
         <div class="thlist-td" v-for="a,b in list">
             <span style="width: 2rem; ">{{b+1}}</span>
             <span class="span-tx">
-                <img :src="'upload/'+a.image_name" alt="">
+                <img :src="a.image_name" alt="">
                 {{a.names}}
             </span>
             <span style="width: 2rem" class="num-color">{{a.wins}}</span>
