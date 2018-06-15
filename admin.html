@@ -54,7 +54,7 @@
 <body>
 <div class="wrap">
     <h1 align="center">后台管理页面</h1>
-    <table>
+    <table v-if="promise">
         <thead>
             <tr>
                 <th>编号</th>
@@ -89,6 +89,23 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="form" v-if="!promise">
+        <div class="header">
+            管理员登录
+        </div>
+        <div class="form-user">
+            <div class="items-wrap">
+                <input type="text" placeholder="请输入账号" v-model="formInfo.account">
+            </div>
+            <div class="items-wrap">
+                <input type="password" placeholder="请输入密码" v-model="formInfo.password">
+            </div>
+            <div class="items-wrap btn">
+                <button @click="fileUp">提交信息</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/jquery.js"></script>
@@ -98,28 +115,61 @@
         el:'.wrap',
         data:function () {
             return{
-                list:null
+                list:null,
+                promise:false,
+                formInfo:{
+                    account:'',
+                    password:''
+                }
             }
         },
         mounted:function () {
-            var _this = this;
-            $.ajax({
-                url:'https://www.mlxiu.com/yunfei/ranking',
-                type:'post',
-                success:function (data) {
-                    if (data.code == 1) {
-                        _this.list=data.attr
-                        console.log(_this.list)
-                    }else{
-                        alert('获取信息失败，请刷新重试!');
-                    }
-                },
-                error:function (a,b,c) {
-                    alert('服务器连接失败');
-                }
-            })
+
         },
         methods:{
+            fileUp:function(e){
+                var _this = this;
+                if(!_this.formInfo['account'])
+                    alert('账号不能为空');
+
+                if(!_this.formInfo['password'])
+                    alert('密码不能为空');
+
+                $.ajax({
+                    url:'https://www.mlxiu.com/yunfei/admin',
+                    data:_this.formInfo,
+                    type:'post',
+                    success:function (data) {
+                        if (data.code == 0) {
+                            _this.promise = true;
+                            _this.ranking();
+                        }else{
+                            alert(data.error);
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                })
+            },
+            ranking:function(){
+                var _this = this;
+                $.ajax({
+                    url:'https://www.mlxiu.com/yunfei/ranking',
+                    type:'post',
+                    success:function (data) {
+                        if (data.code == 0) {
+                            _this.list=data.attr
+                            console.log(_this.list)
+                        }else{
+                            alert(data.error);
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                })
+            },
             updata:function (e) {
                 var rowid = e.currentTarget.getAttribute('data-key');
                 $('.' + rowid).find('input').removeAttr('disabled').css('background', '#dd4e41');
@@ -139,11 +189,11 @@
                         phone:phone
                     },
                     success:function (data) {
-                        if (data.code == 1) {
+                        if (data.code == 0) {
                             $('body').append('<div class="msgalert">修改成功</div>');
                             $('.msgalert').fadeOut(500)
                         }else{
-                            alert('获取信息失败，请刷新重试!');
+                            alert(data.error);
                         }
                     },
                     error:function (a,b,c) {

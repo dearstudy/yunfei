@@ -9,6 +9,10 @@ class Yunfei_model extends CI_Model
 		parent::__construct();
 
 		$this->db = $this->load->database('yunfei', TRUE);
+		if (FALSE === $this->db->conn_id)
+		{
+			return array('code'=>10000 , 'error'=>'数据库连接失败');
+		}
 	}
 
 	public function __destruct()
@@ -22,50 +26,50 @@ class Yunfei_model extends CI_Model
 
 	public function register($value)
 	{
-			$phone = $value['phone'];
-			if(FALSE === isset($phone))
-				return array('code'=>10000 , 'error'=>'缺少电话号码');
+		$phone = $value['phone'];
+		if(FALSE === isset($phone))
+			return array('code'=>10000 , 'error'=>'缺少电话号码');
 
-			$borthdays = $value['borthdays'];
-			if(FALSE === isset($borthdays))
-				return array('code'=>10000 , 'error'=>'缺少身份证号码');
+		$borthdays = $value['borthdays'];
+		if(FALSE === isset($borthdays))
+			return array('code'=>10000 , 'error'=>'缺少身份证号码');
 
-			$query = $this->db->get_where('user', array('phone' => $phone));
-			if ($query->num_rows() > 0)
-			{
-				return array('code'=>10000 , 'error'=>'该电话号码已经报名了');
-			}
+		$query = $this->db->get_where('user', array('phone' => $phone));
+		if ($query->num_rows() > 0)
+		{
+			return array('code'=>10000 , 'error'=>'该电话号码已经报名了');
+		}
 
-			$query = $this->db->get_where('user', array('borthdays' => $borthdays));
-			if ($query->num_rows() > 0)
-			{
-				return array('code'=>10000 , 'error'=>'该身份证号码已经报名了');
-			}
+		$query = $this->db->get_where('user', array('borthdays' => $borthdays));
+		if ($query->num_rows() > 0)
+		{
+			return array('code'=>10000 , 'error'=>'该身份证号码已经报名了');
+		}
 
-			$query = $this->db->insert('user', $value);
-			if ($query == FALSE)
-			{
-				return array('code' => 10000, 'error' => '注册失败');
-			}
-			return array('code' => 0, 'error' => '注册成功');
+		$query = $this->db->insert('user', $value);
+		if ($query == FALSE)
+		{
+			return array('code' => 10000, 'error' => '注册失败');
+		}
+		return array('code' => 0, 'error' => '注册成功');
 	}
 
 	public function signup($value)
 	{
-			$phone = $value['phone'];
-			if(FALSE === isset($phone))
-				return array('code'=>10000 , 'error'=>'缺少电话号码');
+		$phone = $value['phone'];
+		if(FALSE === isset($phone))
+			return array('code'=>10000 , 'error'=>'缺少电话号码');
 
-			$localtimes = $value['localtimes'];
-			if(FALSE === isset($localtimes))
-				return array('code'=>10000 , 'error'=>'缺少场馆');
+		$localtimes = $value['localtimes'];
+		if(FALSE === isset($localtimes))
+			return array('code'=>10000 , 'error'=>'缺少场馆');
 
-			$query = $this->db->where('phone', $phone)->update('user', array('localtimes' => $localtimes));
-			if(FALSE ==$query)
-			{
-				return array('code' => 10000, 'error' => '报名失败');
-			}
-			return array('code' => 0, 'error' => '报名成功');
+		$query = $this->db->where('phone', $phone)->update('user', array('localtimes' => $localtimes));
+		if(FALSE ==$query)
+		{
+			return array('code' => 10000, 'error' => '报名失败');
+		}
+		return array('code' => 0, 'error' => '报名成功');
 	}
 
 	public function ranking()
@@ -77,5 +81,15 @@ class Yunfei_model extends CI_Model
 		}
 		$data = $query->result_array();
 		return array('code' => 0, 'attr' => $data);
+	}
+
+	public function upranking($data, $phone)
+	{
+		$query = $this->db->where('phone', $phone)->update('user', $data);
+		if(FALSE ==$query)
+		{
+			return array('code' => 10000, 'error' => '设置失败');
+		}
+		return array('code' => 0, 'error' => '设置成功');
 	}
 }

@@ -8,6 +8,32 @@ class Yunfei extends MY_Controller {
 
 	}
 
+	public function admin()
+	{
+		if (FALSE === $this->input->is_ajax_request())
+		{
+			$this->output->json(array('code' => 10000, 'error' => '不正确请求'));
+		}
+
+		$account = $this->input->post('account');
+		if(FALSE === isset($account))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[账号]'));
+		}
+
+		$password = $this->input->post('password');
+		if(FALSE === isset($password))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[密码]'));
+		}
+
+		if($account == '2018' && $password == 'itbldcom')
+		{
+			$this->output->json(array('code' => 0, 'data' => '允许登录'));
+		}
+		$this->output->json(array('code' => 10000, 'error' => '不允许操作'));
+	}
+
 	// 注册
 	public function register()
 	{
@@ -71,12 +97,12 @@ class Yunfei extends MY_Controller {
 			$filename = base_url() . "static/yunfei/avatar/" . $filename;
 			$this->load->model('yunfei/Yunfei_model');
 			$data = array('names' => $name,
-														'phone' => $phone,
-														'cards' => $card,
-														'sex' => $sex,
-														'borthdays' => $borthday,
-														'weight' => $weight,
-														'image_name' => $filename);
+							'phone' => $phone,
+							'cards' => $card,
+							'sex' => $sex,
+							'borthdays' => $borthday,
+							'weight' => $weight,
+							'image_name' => $filename);
 
 			$result = $this->Yunfei_model->register($data);
 			$this->output->json($result);
@@ -105,9 +131,7 @@ class Yunfei extends MY_Controller {
 		}
 
 		$this->load->model('yunfei/Yunfei_model');
-		$data = array('localtimes' => $changg,
-													'phone' => $phone);
-
+		$data = array('localtimes' => $changg,'phone' => $phone);
 		$result = $this->Yunfei_model->signup($data);
 		$this->output->json($result);
 	}
@@ -124,28 +148,64 @@ class Yunfei extends MY_Controller {
 		$this->output->json($result);
 	}
 
+	public function upranking()
+	{
+		if (FALSE === $this->input->is_ajax_request())
+		{
+			$this->output->json(array('code' => 10000, 'error' => '不正确请求'));
+		}
+
+		$wins = $this->input->post('wins');
+		if(FALSE === isset($filename))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[0]'));
+		}
+
+		$loser = $this->input->post('loser');
+		if(FALSE === isset($myfile))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[1]'));
+		}
+
+		$counts = $this->input->post('counts');
+		if(FALSE === isset($name))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[2]'));
+		}
+
+		$phone = $this->input->post('phone');
+		if(FALSE === isset($phone))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[3]'));
+		}
+
+		$this->load->model('yunfei/Yunfei_model');
+		$result = $this->Yunfei_model->upranking(array('wins' => $wins, 'loser' => $loser, 'counts' => $counts), $phone);
+		$this->output->json($result);
+	}
+
 	private function uploadBase64($basestr, $path, $name)
 	{
-			if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $basestr, $result))
+		if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $basestr, $result))
+		{
+			$type = $result[2];
+
+			if (!file_exists($path))
 			{
-					$type = $result[2];
-
-					if (!file_exists($path))
-					{
-							mkdir($path, 0777, TRUE);
-					}
-
-					//写入操作
-					if (file_put_contents($path.$name, base64_decode(str_replace($result[1], '', $basestr))))
-					{
-							return true;
-					}
-					else
-					{
-							return false;
-					}
+				mkdir($path, 0777, TRUE);
 			}
-			return false;
+
+			//写入操作
+			if (file_put_contents($path.$name, base64_decode(str_replace($result[1], '', $basestr))))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
 	}
 
 }
