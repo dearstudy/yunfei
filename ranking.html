@@ -21,7 +21,7 @@
     <div class="wins-img">
         <p class="num-name">{{list[0].names}}</p>
         <img :src="list[0].image_name" alt="">
-        <button><img src="img/qt.png" alt=""><span>我要挑战</span></button>
+        <button @click="signup"><img src="img/qt.png" alt=""><span>我要挑战</span></button>
     </div>
     <div class="ranking-list">
         <div class="thlist">
@@ -72,6 +72,11 @@
                 }
             })
 
+        },
+        methods:{
+            signup:function(){
+                window.location.href='index.html'
+            }
         }
     })
 </script>

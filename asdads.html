@@ -10,9 +10,6 @@
 </body>
 <script>
     var file = document.getElementById('file');
-
-
-
     file.onchange=function () {
         photoCompress(file.files[0], {
             quality: 0.2
@@ -21,8 +18,5 @@
             console.log(convertBase64UrlToBlob(base64Codes))
         })
     }
-
-
-
 </script>
 </html>
