@@ -156,19 +156,19 @@ class Yunfei extends MY_Controller {
 		}
 
 		$wins = $this->input->post('wins');
-		if(FALSE === isset($filename))
+		if(FALSE === isset($wins))
 		{
 			$this->output->json(array('code' => 10000, 'error' => '缺失参数[0]'));
 		}
 
 		$loser = $this->input->post('loser');
-		if(FALSE === isset($myfile))
+		if(FALSE === isset($loser))
 		{
 			$this->output->json(array('code' => 10000, 'error' => '缺失参数[1]'));
 		}
 
 		$counts = $this->input->post('counts');
-		if(FALSE === isset($name))
+		if(FALSE === isset($counts))
 		{
 			$this->output->json(array('code' => 10000, 'error' => '缺失参数[2]'));
 		}
