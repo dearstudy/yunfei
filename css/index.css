@@ -154,6 +154,7 @@ button {
 }
 .wins-img {
     width: 100%;
+    min-height: 10rem;
     position: relative;
 }
 .wins-img img {
