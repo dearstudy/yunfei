@@ -115,11 +115,11 @@ class Yunfei extends MY_Controller {
 			$this->output->json(array('code' => 10000, 'error' => '缺失参数[7]'));
 		}
 
-		$path =  FCPATH . "static/yunfei/avatar/";
+		$path =  FCPATH . "yunfei/upload/avatar/";
 		$result = $this->uploadBase64($myfile, $path, $filename);
 		if(TRUE == $result)
 		{
-			$filename = base_url() . "static/yunfei/avatar/" . $filename;
+			$filename = base_url() . "yunfei/upload/avatar/" . $filename;
 			$this->load->model('yunfei/Yunfei_model');
 			$data = array('names' => $name,
 							'phone' => $phone,
