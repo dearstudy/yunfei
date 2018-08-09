@@ -98,7 +98,7 @@ class Yunfei_model extends CI_Model
 		if(FALSE === isset($localtimes))
 			return array('code'=>10000 , 'error'=>'缺少场馆');
 
-		$query = $this->db->where('phone', $phone)->update('user', array('localtimes' => $localtimes));
+		$query = $this->db->where('phone', $phone)->update('user', array('localtimes' => $localtimes, 'type' => $value['type']));
 		if(FALSE ==$query)
 		{
 			return array('code' => 10000, 'error' => '报名失败');
@@ -106,9 +106,9 @@ class Yunfei_model extends CI_Model
 		return array('code' => 0, 'error' => '报名成功');
 	}
 
-	public function ranking()
+	public function ranking($type)
 	{
-		$query = $this->db->select('*')->from('user')->order_by('counts', 'DESC')->get();
+		$query = $this->db->select('*')->from('user')->where('type', $type)->order_by('counts', 'DESC')->get();
 		if(FALSE == $query)
 		{
 			return array('code' => 10000, 'error' => '查询失败');
