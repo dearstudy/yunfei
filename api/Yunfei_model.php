@@ -108,7 +108,7 @@ class Yunfei_model extends CI_Model
 
 	public function ranking($type)
 	{
-		$query = $this->db->select('*')->from('user')->where('type', $type)->order_by('counts', 'DESC')->get();
+		$query = $this->db->select('*')->from('user')->where(array('type' => $type, 'status' => 1))->order_by('counts', 'DESC')->get();
 		if(FALSE == $query)
 		{
 			return array('code' => 10000, 'error' => '查询失败');
