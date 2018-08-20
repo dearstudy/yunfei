@@ -17,6 +17,8 @@ function canvasDataURL(path, obj, callback){
             scale = w / h;
         w = obj.width || w;
         h = obj.height || (w / scale);
+        console.log(obj);
+        console.log(w);
         var quality = 0.7;
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');

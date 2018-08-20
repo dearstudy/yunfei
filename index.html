@@ -122,7 +122,7 @@
                 }
                 var ys = null;
                 console.log(files.size);
-                photoCompress(files, {quality: 0.7}, function (base64) {
+                photoCompress(files, {quality: 0.7, width: 720}, function (base64) {
                     // ys=convertBase64UrlToBlob(base64);
                     formob['myfile'] = base64;
                     for(var a in _this.formInfo){

@@ -35,34 +35,77 @@
             font-size: 0.7rem;
             color: #fff;
         }
+
+        .type-btns{
+            height:2.5rem;
+        }
+        .type-btn{
+            float:left;
+            width: 50%;
+            text-align: center;
+            font-size: 1rem;
+            height:2.5rem;
+            line-height: 2.5rem;
+            background-color: #ebe9f5;
+            color: #c1bfc7;
+        }
+
+        .type-btn-active{
+            background-color: #f9f7fd;
+            color:#7c7c7d;
+        }
+
+        .no-data{
+            display: inline-block;
+            width:120px;
+            height:40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7c7c7d;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -60px;
+            margin-top: - 20px;
+        }
     </style>
 </head>
 <body>
 <div class="wrap" v-cloak>
-    <div class="wins-img">
-        <p class="num-name">{{list[0].names}}</p>
-        <img :src="list[0].image_name" alt="">
-        <button @click="signup"><img src="img/qt.png" alt=""><span>我要挑战</span></button>
-        <div class="login-btn" @click="login"><img src="img/login-icon.png" alt=""><span>点击登录</span></div>
+    <div class="type-btns">
+        <div class="type-btn type-btn-active" v-on:click="request(1)">成人组</div>
+        <div class="type-btn" v-on:click="request(2)">少儿组</div>
     </div>
-    <div class="ranking-list">
-        <div class="thlist">
-            <span style="width: 2rem; ">排名</span>
-            <span style="width: 6rem; ">参赛者</span>
-            <span style="width: 2rem">胜</span>
-            <span style="width: 2rem">负</span>
-            <span style="width: 4rem;flex: 1;">总得分</span>
-        </div>
-        <div class="thlist-td" v-for="a,b in list">
-            <span style="width: 2rem; ">{{b+1}}</span>
-            <span class="span-tx">
-                <img :src="a.image_name" alt="">
-                {{a.names}}
-            </span>
-            <span style="width: 2rem" class="num-color">{{a.wins}}</span>
-            <span style="width: 2rem" class="num-color">{{a.loser}}</span>
-            <span style="width: 4rem;flex: 1;color: #15aa10; font-weight: bold;font-size: 1.2rem">{{a.counts}}</span>
-        </div>
+    <div v-if="list.length > 0">
+      <div class="wins-img">
+          <p class="num-name">{{list[0].names}}</p>
+          <img :src="list[0].image_name" alt="">
+          <button @click="signup"><img src="img/qt.png" alt=""><span>我要挑战</span></button>
+          <div class="login-btn" @click="login"><img src="img/login-icon.png" alt=""><span>点击登录</span></div>
+      </div>
+      <div class="ranking-list">
+          <div class="thlist">
+              <span style="width: 2rem; ">排名</span>
+              <span style="width: 6rem; ">参赛者</span>
+              <span style="width: 2rem">胜</span>
+              <span style="width: 2rem">负</span>
+              <span style="width: 4rem;flex: 1;">总得分</span>
+          </div>
+          <div class="thlist-td" v-for="a,b in list">
+              <span style="width: 2rem; ">{{b+1}}</span>
+              <span class="span-tx">
+                  <img :src="a.image_name" alt="">
+                  {{a.names}}
+              </span>
+              <span style="width: 2rem" class="num-color">{{a.wins}}</span>
+              <span style="width: 2rem" class="num-color">{{a.loser}}</span>
+              <span style="width: 4rem;flex: 1;color: #15aa10; font-weight: bold;font-size: 1.2rem">{{a.counts}}</span>
+          </div>
+      </div>
+    </div>
+    <div v-else>
+        <div class="no-data">暂无人上榜</div>
     </div>
 </div>
 <script src="js/vue.js"></script>
@@ -73,27 +116,11 @@
         el:'.wrap',
         data:function () {
             return{
-                list:['1']
+                list:[],
             }
         },
         created:function () {
-            var _this = this;
-            $.ajax({
-                url:'https://www.mlxiu.com/yunfei/ranking',
-                type:'post',
-                success:function (data) {
-                    if (data.code == 0) {
-                        _this.list=data.attr
-                        console.log(_this.list)
-                    }else{
-                        alert('获取信息失败，请刷新重试!');
-                    }
-                },
-                error:function (a,b,c) {
-                    alert('服务器连接失败');
-                }
-            })
-
+            this.request(1);
         },
         methods:{
             signup:function(){
@@ -101,6 +128,40 @@
             },
             login:function(){
                 window.location.href='login.html'
+            },
+            request:function(value){
+                if(value == 1)
+                {
+                    $($('.type-btn')[1]).removeClass('type-btn-active');
+                    $($('.type-btn')[0]).addClass('type-btn-active');
+                }
+                else if(value == 2)
+                {
+                    $($('.type-btn')[0]).removeClass('type-btn-active');
+                    $($('.type-btn')[1]).addClass('type-btn-active');
+                }
+
+                var _this = this;
+                $.ajax({
+                    url:'https://www.mlxiu.com/yunfei/ranking',
+                    type:'post',
+                    data:{type:value},
+                    success:function (data) {
+                        if (data.code == 0) {
+                            _this.list=data.attr;
+                            if(_this.list.length == 0)
+                            {
+                              $('.content').append('<div style="display:inline-block;width:100%;text-align:center;margin-top:20rem;">暂无人上榜</div>');
+                            }
+                            console.log(data.attr);
+                        }else{
+                            alert('获取信息失败，请刷新重试!');
+                        }
+                    },
+                    error:function (a,b,c) {
+                        alert('服务器连接失败');
+                    }
+                });
             }
         }
     })

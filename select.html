@@ -98,6 +98,12 @@
                     <option :value="a" v-for="a in changg">{{a}}</option>
                 </select>
             </div>
+            <div class="items-wrap">
+                <select name="" id="" v-model="type">
+                    <option value="" selected>参赛类别</option>
+                    <option :value="a" v-for="a in changt">{{a}}</option>
+                </select>
+            </div>
             <div class="items-wrap btn" style="margin-top: 3rem;">
                 <button @click="js_sure">确认参赛</button>
             </div>
@@ -122,8 +128,13 @@
                     '8月23日（四）19:00-21:00 普陀馆',
                     '8月31日（五）18:30-20:30 黄浦馆',
                 ],
+                changt:[
+                    '成人组',
+                    '少儿组',
+                ],
                 imagesrc:localStorage.img,
                 selects:'',
+                type:'',
                 isShow:false
             }
         },
@@ -136,6 +147,7 @@
                     data:{
                         phone:localStorage.phone,
                         changg:this.selects,
+                        type:this.type,
                     },
                     type:'post',
                     success:function (data) {
