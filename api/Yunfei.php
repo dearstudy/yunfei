@@ -152,11 +152,23 @@ class Yunfei extends MY_Controller {
 		$changg = $this->input->post('changg');
 		if(FALSE === isset($changg))
 		{
-			$this->output->json(array('code' => 10000, 'error' => '缺失参数[1]'));
+			$this->output->json(array('code' => 10000, 'error' => '请选择场馆'));
+		}
+
+		$type = $this->input->post('type');
+		if(FALSE === isset($type))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '请选择类别'));
+		}
+
+		if($type == '成人组'){
+			$type = 1;
+		}else{
+			$type = 2;
 		}
 
 		$this->load->model('yunfei/Yunfei_model');
-		$data = array('localtimes' => $changg,'phone' => $phone);
+		$data = array('localtimes' => $changg, 'phone' => $phone, 'type' => $type);
 		$result = $this->Yunfei_model->signup($data);
 		$this->output->json($result);
 	}
@@ -168,8 +180,14 @@ class Yunfei extends MY_Controller {
 			$this->output->json(array('code' => 10000, 'error' => '不正确请求'));
 		}
 
+		$type = $this->input->post('type');
+		if(FALSE === isset($type))
+		{
+			$this->output->json(array('code' => 10000, 'error' => '缺失参数[0]'));
+		}
+
 		$this->load->model('yunfei/Yunfei_model');
-		$result = $this->Yunfei_model->ranking();
+		$result = $this->Yunfei_model->ranking($type);
 		$this->output->json($result);
 	}
 
